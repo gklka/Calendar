@@ -29,6 +29,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MGCTimedEventsViewLayout.h"
+#import "MGCAllDayEventsViewLayout.h"
 
 @class MGCEventView;
 @class MGCDateRange;
@@ -73,7 +75,7 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  * 
  * The view also displays a bar at the top with full-day events.
  */
-@interface MGCDayPlannerView : UIView
+@interface MGCDayPlannerView : UIView <MGCTimedEventsViewLayoutDelegate, MGCAllDayEventsViewLayoutDelegate>
 
 /*! 
 	@group Configuring a day planner view
@@ -245,6 +247,20 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
     @discussion Default value is `MGCDayPlannerCoveringTypeClassic`.
  */
 @property (nonatomic) MGCDayPlannerCoveringType eventCoveringType;
+
+/*!
+    @abstract   Class responsible for laying out the events with from-to time vertically.
+    @discussion It's not recommended to overwrite this class, but if you do, subclass `MGCTimedEventsViewLayout`.
+    @discussion The class provides a default value.
+ */
+@property (nonatomic) MGCTimedEventsViewLayout *timedEventsViewLayout;
+
+/*!
+    @abstract   Class responsible for laying out the all day events vertically.
+    @discussion It's not recommended to overwrite this class, but if you do, subclass `MGCAllDayEventsViewLayout`.
+    @discussion The class provides a default value.
+ */
+@property (nonatomic) MGCAllDayEventsViewLayout *allDayEventsViewLayout;
 
 /*!
 	@group Navigating through a day planner view

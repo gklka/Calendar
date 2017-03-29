@@ -32,8 +32,6 @@
 #import "NSCalendar+MGCAdditions.h"
 #import "MGCDateRange.h"
 #import "MGCReusableObjectQueue.h"
-#import "MGCTimedEventsViewLayout.h"
-#import "MGCAllDayEventsViewLayout.h"
 #import "MGCDayColumnCell.h"
 #import "MGCEventCell.h"
 #import "MGCEventView.h"
@@ -98,7 +96,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 @end
 
 
-@interface MGCDayPlannerView () <UICollectionViewDataSource, MGCTimedEventsViewLayoutDelegate, MGCAllDayEventsViewLayoutDelegate, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate>
+@interface MGCDayPlannerView () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate>
 
 // subviews
 @property (nonatomic, readonly) UICollectionView *timedEventsView;
@@ -107,10 +105,6 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 @property (nonatomic, readonly) UICollectionView *dayColumnsView;
 @property (nonatomic, readonly) UIScrollView *timeScrollView;
 @property (nonatomic, readonly) MGCTimeRowsView *timeRowsView;
-
-// collection view layouts
-@property (nonatomic, readonly) MGCTimedEventsViewLayout *timedEventsViewLayout;
-@property (nonatomic, readonly) MGCAllDayEventsViewLayout *allDayEventsViewLayout;
 
 @property (nonatomic) MGCReusableObjectQueue *reuseQueue;		// reuse queue for event views (MGCEventView)
 
