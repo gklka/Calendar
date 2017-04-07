@@ -35,6 +35,7 @@
 
 @protocol MGCDayPlannerViewDataSource;
 @protocol MGCDayPlannerViewDelegate;
+@protocol MGCDayPlannerViewCustomLayoutDelegate;
 
 
 typedef NS_ENUM(NSUInteger, MGCEventType) {
@@ -59,7 +60,8 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerTimeMark) {
 
 typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
     MGCDayPlannerCoveringTypeClassic = 0,
-    MGCDayPlannerCoveringTypeComplex = 1
+    MGCDayPlannerCoveringTypeComplex = 1,
+    MGCDayPlannerCoveringTypeCustom = 2
 };
 
 
@@ -245,6 +247,8 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
     @discussion Default value is `MGCDayPlannerCoveringTypeClassic`.
  */
 @property (nonatomic) MGCDayPlannerCoveringType eventCoveringType;
+
+@property (nonatomic, weak) id<MGCDayPlannerViewCustomLayoutDelegate> timedEventsCustomLayoutDelegate;
 
 /*!
 	@group Navigating through a day planner view
@@ -685,5 +689,17 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 				you programmatically deselect the event.
  */
 - (void)dayPlannerView:(MGCDayPlannerView*)view didDeselectEventOfType:(MGCEventType)type atIndex:(NSUInteger)index date:(NSDate*)date;
+
+@end
+
+
+/*!
+ * The MGCDayPlannerViewCustomLayoutDelegate protocol defines methods that allow you to manage the selection of events in
+ * a day planner view and respond to operations like scrolling and changes in the display.
+ * The methods of this protocol are all optional.
+ */
+@protocol MGCDayPlannerViewCustomLayoutDelegate<NSObject>
+
+- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section;
 
 @end

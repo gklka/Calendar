@@ -475,7 +475,27 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 // public
 - (void)setEventCoveringType:(MGCDayPlannerCoveringType)eventCoveringType {
     _eventCoveringType = eventCoveringType;
-    self.timedEventsViewLayout.coveringType = eventCoveringType == MGCDayPlannerCoveringTypeComplex ? TimedEventCoveringTypeComplex : TimedEventCoveringTypeClassic;
+    
+    switch (eventCoveringType) {
+        case TimedEventCoveringTypeComplex:
+            self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeComplex;
+            break;
+        case TimedEventCoveringTypeCustom:
+            self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeCustom;
+            self.timedEventsViewLayout.customLayoutDelegate = self.timedEventsCustomLayoutDelegate;
+            break;
+        default:
+            self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeClassic;
+            break;
+    }
+
+    [self.dayColumnsView setNeedsDisplay];
+}
+
+// public
+- (void)setTimedEventsCustomLayoutDelegate:(id<MGCDayPlannerViewCustomLayoutDelegate>)timedEventsCustomLayoutDelegate {
+    _timedEventsCustomLayoutDelegate = timedEventsCustomLayoutDelegate;
+    self.timedEventsViewLayout.customLayoutDelegate = timedEventsCustomLayoutDelegate;
     [self.dayColumnsView setNeedsDisplay];
 }
 
@@ -974,7 +994,19 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 		_timedEventsViewLayout = [MGCTimedEventsViewLayout new];
 		_timedEventsViewLayout.delegate = self;
 		_timedEventsViewLayout.dayColumnSize = self.dayColumnSize;
-        _timedEventsViewLayout.coveringType = self.eventCoveringType == TimedEventCoveringTypeComplex ? TimedEventCoveringTypeComplex : TimedEventCoveringTypeClassic;
+        
+        switch (self.eventCoveringType) {
+            case TimedEventCoveringTypeComplex:
+                _timedEventsViewLayout.coveringType = TimedEventCoveringTypeComplex;
+                break;
+            case TimedEventCoveringTypeCustom:
+                _timedEventsViewLayout.coveringType = TimedEventCoveringTypeCustom;
+                _timedEventsViewLayout.customLayoutDelegate = self.timedEventsCustomLayoutDelegate;
+                break;
+            default:
+                _timedEventsViewLayout.coveringType = TimedEventCoveringTypeClassic;
+                break;
+        }
 	}
 	return _timedEventsViewLayout;
 }
