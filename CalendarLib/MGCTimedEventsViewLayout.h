@@ -42,6 +42,7 @@ typedef enum : NSUInteger
 
 
 @protocol MGCTimedEventsViewLayoutDelegate;
+@protocol MGCTimedEventsViewCustomLayoutDelegate;
 @class MGCEventCellLayoutAttributes;
 
 
@@ -60,7 +61,7 @@ typedef enum : NSUInteger
 @interface MGCTimedEventsViewLayout : UICollectionViewLayout
 
 @property (nonatomic, weak) id<MGCTimedEventsViewLayoutDelegate> delegate;
-@property (nonatomic, weak) id<MGCDayPlannerViewCustomLayoutDelegate> customLayoutDelegate;
+@property (nonatomic, weak) id<MGCTimedEventsViewCustomLayoutDelegate> customLayoutDelegate;
 @property (nonatomic) CGSize dayColumnSize;
 @property (nonatomic) CGFloat minimumVisibleHeight;  // if 2 cells overlap, and the height of the uncovered part of the upper cell is less than this value, the column is split
 @property (nonatomic) BOOL ignoreNextInvalidation;  // for some reason, UICollectionView reloadSections: messes up with scrolling and animations so we have to stick with using reloadData even when only individual sections need to be invalidated. As a workaroud, we explicitly invalidate them with custom context, and set this flag to YES before calling reloadData
@@ -74,5 +75,12 @@ typedef enum : NSUInteger
 // x and width of returned rect are ignored
 - (CGRect)collectionView:(UICollectionView*)collectionView layout:(MGCTimedEventsViewLayout*)layout rectForEventAtIndexPath:(NSIndexPath*)indexPath;
 - (NSArray*)collectionView:(UICollectionView*)collectionView layout:(MGCTimedEventsViewLayout*)layout dimmingRectsForSection:(NSUInteger)section;
+
+@end
+
+
+@protocol MGCTimedEventsViewCustomLayoutDelegate<NSObject>
+
+- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section;
 
 @end

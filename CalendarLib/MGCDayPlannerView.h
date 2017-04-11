@@ -486,6 +486,9 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 - (void)reloadDimmedTimeRanges;
 
+
+- (NSDate*)dateFromDayOffset:(NSInteger)dayOffset;
+
 @end
 
 

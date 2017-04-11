@@ -98,7 +98,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 @end
 
 
-@interface MGCDayPlannerView () <UICollectionViewDataSource, MGCTimedEventsViewLayoutDelegate, MGCAllDayEventsViewLayoutDelegate, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate>
+@interface MGCDayPlannerView () <UICollectionViewDataSource, MGCTimedEventsViewLayoutDelegate, MGCAllDayEventsViewLayoutDelegate, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate, MGCTimedEventsViewCustomLayoutDelegate>
 
 // subviews
 @property (nonatomic, readonly) UICollectionView *timedEventsView;
@@ -2036,6 +2036,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     return rects;
 }
 
+#pragma mark - MGCTimedEventsViewCustomLayoutDelegate
+
+- (NSArray *)adjustLayoutForOverlappingCells:(NSArray *)attributes inSection:(NSUInteger)section {
+    return [self.timedEventsCustomLayoutDelegate adjustLayoutForOverlappingCells:attributes inSection:section];
+}
 
 #pragma mark - MGCAllDayEventsViewLayoutDelegate
 
