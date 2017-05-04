@@ -1779,7 +1779,8 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView*)collectionView
 {
-	return self.numberOfLoadedDays;
+    [collectionView.collectionViewLayout invalidateLayout];
+    return self.numberOfLoadedDays;
 }
 
 // public
