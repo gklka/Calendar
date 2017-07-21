@@ -293,8 +293,10 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         
     } else if (self.coveringType == TimedEventCoveringTypeCustom) {
         
+        NSLog(@"atrributes: %@", attributes);
+        
         // Ask the delegate
-        return [self.customLayoutDelegate adjustLayoutForOverlappingCells:attributes inSection:section];
+        return [self.customLayoutDelegate adjustLayoutForOverlappingCells:attributes inSection:section forObjects:@[]];
     }
     
     return @[];

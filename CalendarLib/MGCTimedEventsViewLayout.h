@@ -81,6 +81,6 @@ typedef enum : NSUInteger
 
 @protocol MGCTimedEventsViewCustomLayoutDelegate<NSObject>
 
-- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section;
+- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects;
 
 @end

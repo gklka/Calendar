@@ -562,6 +562,12 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 - (void)dayPlannerView:(MGCDayPlannerView*)view createNewEventOfType:(MGCEventType)type atDate:(NSDate*)date;
 
+/*!
+	@abstract	Asks the data source for the model object that corresponds to the specified event in the collection view.
+    @discussion The method will be used if you want to use custom layout delegates to give you back your
+ */
+- (id)dayPlannerView:(MGCDayPlannerView*)view dataObjectForEventOfType:(MGCEventType)type atIndex:(NSUInteger)index date:(NSDate*)date;
+
 @end
 
 
@@ -703,6 +709,6 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 @protocol MGCDayPlannerViewCustomLayoutDelegate<NSObject>
 
-- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section;
+- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects;
 
 @end

@@ -2040,7 +2040,11 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 #pragma mark - MGCTimedEventsViewCustomLayoutDelegate
 
 - (NSArray *)adjustLayoutForOverlappingCells:(NSArray *)attributes inSection:(NSUInteger)section {
-    return [self.timedEventsCustomLayoutDelegate adjustLayoutForOverlappingCells:attributes inSection:section];
+    NSMutableArray<id> *objects = [NSMutableArray new];
+    
+    
+    
+    return [self.timedEventsCustomLayoutDelegate adjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects];
 }
 
 #pragma mark - MGCAllDayEventsViewLayoutDelegate
