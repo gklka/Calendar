@@ -36,6 +36,7 @@
 @protocol MGCDayPlannerViewDataSource;
 @protocol MGCDayPlannerViewDelegate;
 @protocol MGCDayPlannerViewCustomLayoutDelegate;
+@protocol MGCDayPlannerViewCustomLayoutDataSource;
 
 
 typedef NS_ENUM(NSUInteger, MGCEventType) {
@@ -249,6 +250,7 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 @property (nonatomic) MGCDayPlannerCoveringType eventCoveringType;
 
 @property (nonatomic, weak) id<MGCDayPlannerViewCustomLayoutDelegate> timedEventsCustomLayoutDelegate;
+@property (nonatomic, weak) id<MGCDayPlannerViewCustomLayoutDataSource> timedEventsCustomLayoutDataSource;
 
 /*!
 	@group Navigating through a day planner view
@@ -709,6 +711,13 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 @protocol MGCDayPlannerViewCustomLayoutDelegate<NSObject>
 
-- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects;
+- (NSArray*)dayPlannerViewAdjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects;
+
+@end
+
+
+@protocol MGCDayPlannerViewCustomLayoutDataSource<NSObject>
+
+- (id)dayPlannerViewObjectForIndexPath:(NSIndexPath*)indexPath;
 
 @end

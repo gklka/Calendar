@@ -121,6 +121,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
 {
     NSInteger numItems = [self.collectionView numberOfItemsInSection:section];
     NSMutableArray *layoutAttribs = [NSMutableArray arrayWithCapacity:numItems];
+    NSMutableArray *objects = [NSMutableArray arrayWithCapacity:numItems];
     
     for (NSInteger item = 0; item < numItems; item++) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
@@ -138,10 +139,17 @@ static NSString* const EventCellsKey = @"EventCellsKey";
             cellAttribs.zIndex = 1;  // should appear above dimming views
             
             [layoutAttribs addObject:cellAttribs];
+            if (self.coveringType == TimedEventCoveringTypeCustom &&
+                self.customLayoutDelegate) {
+                id object = [self.customLayoutDataSource dayPlannerViewObjectForIndexPath:indexPath];
+                if (object) {
+                    [objects addObject:object];
+                }
+            }
         }
     }
     
-    return [self adjustLayoutForOverlappingCells:layoutAttribs inSection:section];
+    return [self adjustLayoutForOverlappingCells:layoutAttribs inSection:section forObjects:objects];
 }
 
 - (NSDictionary*)layoutAttributesForSection:(NSUInteger)section
@@ -166,7 +174,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
     return sectionAttribs;
 }
 
-- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section
+- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects
 {
     const CGFloat kOverlapOffset = 4.;
     
@@ -296,7 +304,11 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         NSLog(@"atrributes: %@", attributes);
         
         // Ask the delegate
-        return [self.customLayoutDelegate adjustLayoutForOverlappingCells:attributes inSection:section forObjects:@[]];
+        if (self.customLayoutDelegate) {
+            return [self.customLayoutDelegate dayPlannerViewAdjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects];
+        } else {
+            return attributes;
+        }
     }
     
     return @[];

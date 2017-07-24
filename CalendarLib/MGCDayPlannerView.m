@@ -98,7 +98,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 @end
 
 
-@interface MGCDayPlannerView () <UICollectionViewDataSource, MGCTimedEventsViewLayoutDelegate, MGCAllDayEventsViewLayoutDelegate, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate, MGCTimedEventsViewCustomLayoutDelegate>
+@interface MGCDayPlannerView () <UICollectionViewDataSource, MGCTimedEventsViewLayoutDelegate, MGCAllDayEventsViewLayoutDelegate, UICollectionViewDelegateFlowLayout, MGCTimeRowsViewDelegate>
 
 // subviews
 @property (nonatomic, readonly) UICollectionView *timedEventsView;
@@ -483,6 +483,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         case TimedEventCoveringTypeCustom:
             self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeCustom;
             self.timedEventsViewLayout.customLayoutDelegate = self.timedEventsCustomLayoutDelegate;
+            self.timedEventsViewLayout.customLayoutDataSource = self.timedEventsCustomLayoutDataSource;
             break;
         default:
             self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeClassic;
@@ -1598,7 +1599,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         [self.timedEventsView reloadData];
 		
         MGCTimedEventsViewLayoutInvalidationContext *context = [MGCTimedEventsViewLayoutInvalidationContext new];
-        context.invalidatedSections = [NSIndexSet indexSetWithIndex:section];
+        context.invalidatedSections = [[NSIndexSet indexSetWithIndex:section] mutableCopy];
         [self.timedEventsView.collectionViewLayout invalidateLayoutWithContext:context];
 
 		[self refreshEventMarkForColumnAtDate:date];
@@ -1611,7 +1612,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     [self.dimmedTimeRangesCache removeAllObjects];
     
     MGCTimedEventsViewLayoutInvalidationContext *context = [MGCTimedEventsViewLayoutInvalidationContext new];
-    context.invalidatedSections = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.numberOfLoadedDays)];
+    context.invalidatedSections = [[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.numberOfLoadedDays)] mutableCopy];
     context.invalidateEventCells = NO;
     context.invalidateDimmingViews = YES;
     [self.timedEventsView.collectionViewLayout invalidateLayoutWithContext:context];
@@ -2042,9 +2043,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 - (NSArray *)adjustLayoutForOverlappingCells:(NSArray *)attributes inSection:(NSUInteger)section {
     NSMutableArray<id> *objects = [NSMutableArray new];
     
-    
-    
-    return [self.timedEventsCustomLayoutDelegate adjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects];
+    return attributes;
 }
 
 #pragma mark - MGCAllDayEventsViewLayoutDelegate
