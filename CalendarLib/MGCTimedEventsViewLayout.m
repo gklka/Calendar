@@ -149,7 +149,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         }
     }
     
-    return [self adjustLayoutForOverlappingCells:layoutAttribs inSection:section forObjects:objects];
+    return [self adjustLayoutForOverlappingCells:layoutAttribs inSection:section forObjects:objects coveringType:self.coveringType totalWidth:(self.dayColumnSize.width - 2.f)];
 }
 
 - (NSDictionary*)layoutAttributesForSection:(NSUInteger)section
@@ -174,7 +174,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
     return sectionAttribs;
 }
 
-- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects
+- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects coveringType:(TimedEventCoveringType)coveringType totalWidth:(CGFloat)totalWidth
 {
     const CGFloat kOverlapOffset = 4.;
     
@@ -189,7 +189,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         return NSOrderedSame;
     }];
 
-    if (self.coveringType == TimedEventCoveringTypeClassic) {
+    if (coveringType == TimedEventCoveringTypeClassic) {
         
         for (NSUInteger i = 0; i < adjustedAttributes.count; i++) {
             MGCEventCellLayoutAttributes *attribs1 = [adjustedAttributes objectAtIndex:i];
@@ -256,7 +256,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         
         return adjustedAttributes;
         
-    } else if (self.coveringType == TimedEventCoveringTypeComplex) {
+    } else if (coveringType == TimedEventCoveringTypeComplex) {
         
         // Create clusters - groups of rectangles which don't have common parts with other groups
         NSMutableArray *uninspectedAttributes = [adjustedAttributes mutableCopy];
@@ -288,7 +288,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         
         // Distribute rectangles evenly in clusters
         for (NSMutableArray<MGCEventCellLayoutAttributes *> *cluster in clusters) {
-            [self expandCellsToMaxWidthInCluster:cluster];
+            [self expandCellsToMaxWidthInCluster:cluster totalWidth:totalWidth];
         }
         
         // Gather all the attributes and return them
@@ -299,13 +299,26 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         
         return attributes;
         
-    } else if (self.coveringType == TimedEventCoveringTypeCustom) {
+    } else if (coveringType == TimedEventCoveringTypeCustom) {
         
         NSLog(@"atrributes: %@", attributes);
         
         // Ask the delegate
         if (self.customLayoutDelegate) {
-            return [self.customLayoutDelegate dayPlannerViewAdjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects];
+            attributes = [self.customLayoutDelegate dayPlannerViewAdjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects];
+            
+            if ([self.customLayoutDelegate dayPlannerViewShouldUseBuiltinLayoutingAfterCustom]) {
+                
+                if (attributes.count > 0) {
+                    MGCEventCellLayoutAttributes *attribute = [attributes firstObject];
+                    totalWidth = attribute.size.width;
+                }
+                
+                attributes = [self adjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects coveringType:TimedEventCoveringTypeComplex totalWidth:totalWidth];
+            }
+            
+            return attributes;
+                
         } else {
             return attributes;
         }
@@ -314,7 +327,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
     return @[];
 }
 
-- (void)expandCellsToMaxWidthInCluster:(NSMutableArray<MGCEventCellLayoutAttributes *> *)cluster
+- (void)expandCellsToMaxWidthInCluster:(NSMutableArray<MGCEventCellLayoutAttributes *> *)cluster totalWidth:(CGFloat)totalWidth
 {
     const NSUInteger padding = 2.f;
     
@@ -346,8 +359,6 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         maxRowCount = fmax(maxRowCount, column.count);
     }
     
-    CGFloat totalWidth = self.dayColumnSize.width - 2.f;
-
     for (NSInteger i = 0; i < maxRowCount; i++) {
         // Set the x position of the rect
         NSInteger j = 0;

@@ -711,7 +711,20 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
  */
 @protocol MGCDayPlannerViewCustomLayoutDelegate<NSObject>
 
+/*!
+    @abstract   If you want to implement your own layouting of the events in the day planner view, you can move the attribute rectangles
+                wherever you want. The method also provides you your objects, which it gains by calling the
+                `MGCDayPlannerViewCustomLayoutDataSource` for the corresponding cells. `attributes[n]` corresponds to the `objects[n]`.
+    @param      attributes      The attributes to adjust.
+    @param      section         The number of the day column
+    @param      objects         Your model objects to provide you information what should go and where
+    @return     Returns a copy of the attributes array with the modified rectangles.
+ */
 - (NSArray*)dayPlannerViewAdjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects;
+
+/*!
+ */
+- (BOOL)dayPlannerViewShouldUseBuiltinLayoutingAfterCustom;
 
 @end
 
