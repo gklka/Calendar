@@ -192,7 +192,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 	_canCreateEvents = YES;
 	_canMoveEvents = YES;
 	_allowsSelection = YES;
-    _eventCoveringType = TimedEventCoveringTypeClassic;
+    _eventCoveringType = MGCDayPlannerCoveringTypeClassic;
 	
 	_reuseQueue = [[MGCReusableObjectQueue alloc] init];
 	_loadingDays = [NSMutableOrderedSet orderedSetWithCapacity:14];
@@ -475,18 +475,16 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 // public
 - (void)setEventCoveringType:(MGCDayPlannerCoveringType)eventCoveringType {
     _eventCoveringType = eventCoveringType;
+    self.timedEventsViewLayout.coveringType = eventCoveringType;
     
     switch (eventCoveringType) {
-        case TimedEventCoveringTypeComplex:
-            self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeComplex;
+        case MGCDayPlannerCoveringTypeComplex:
             break;
-        case TimedEventCoveringTypeCustom:
-            self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeCustom;
+        case MGCDayPlannerCoveringTypeCustom:
             self.timedEventsViewLayout.customLayoutDelegate = self.timedEventsCustomLayoutDelegate;
             self.timedEventsViewLayout.customLayoutDataSource = self.timedEventsCustomLayoutDataSource;
             break;
         default:
-            self.timedEventsViewLayout.coveringType = TimedEventCoveringTypeClassic;
             break;
     }
 
@@ -995,17 +993,15 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 		_timedEventsViewLayout = [MGCTimedEventsViewLayout new];
 		_timedEventsViewLayout.delegate = self;
 		_timedEventsViewLayout.dayColumnSize = self.dayColumnSize;
+        _timedEventsViewLayout.coveringType = self.eventCoveringType;
         
         switch (self.eventCoveringType) {
-            case TimedEventCoveringTypeComplex:
-                _timedEventsViewLayout.coveringType = TimedEventCoveringTypeComplex;
+            case MGCDayPlannerCoveringTypeComplex:
                 break;
-            case TimedEventCoveringTypeCustom:
-                _timedEventsViewLayout.coveringType = TimedEventCoveringTypeCustom;
+            case MGCDayPlannerCoveringTypeCustom:
                 _timedEventsViewLayout.customLayoutDelegate = self.timedEventsCustomLayoutDelegate;
                 break;
             default:
-                _timedEventsViewLayout.coveringType = TimedEventCoveringTypeClassic;
                 break;
         }
 	}
@@ -1967,6 +1963,8 @@ static const CGFloat kMaxHourSlotHeight = 150.;
         
         return view;
     }
+    
+    return nil;
 }
 
 #pragma mark - MGCTimedEventsViewLayoutDelegate
@@ -2038,13 +2036,13 @@ static const CGFloat kMaxHourSlotHeight = 150.;
     return rects;
 }
 
-#pragma mark - MGCTimedEventsViewCustomLayoutDelegate
-
-- (NSArray *)adjustLayoutForOverlappingCells:(NSArray *)attributes inSection:(NSUInteger)section {
-    NSMutableArray<id> *objects = [NSMutableArray new];
-    
-    return attributes;
-}
+//#pragma mark - MGCTimedEventsViewCustomLayoutDelegate
+//
+//- (NSArray *)adjustLayoutForOverlappingCells:(NSArray *)attributes inSection:(NSUInteger)section {
+//    NSMutableArray<id> *objects = [NSMutableArray new];
+//    
+//    return attributes;
+//}
 
 #pragma mark - MGCAllDayEventsViewLayoutDelegate
 

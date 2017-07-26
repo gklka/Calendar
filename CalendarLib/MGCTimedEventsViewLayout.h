@@ -33,14 +33,6 @@
 
 static NSString* const DimmingViewKind = @"DimmingViewKind";
 
-typedef enum : NSUInteger
-{
-    TimedEventCoveringTypeClassic = 0,
-    TimedEventCoveringTypeComplex = 1,
-    TimedEventCoveringTypeCustom = 2,
-} TimedEventCoveringType;
-
-
 @protocol MGCTimedEventsViewLayoutDelegate;
 @class MGCEventCellLayoutAttributes;
 
@@ -65,7 +57,7 @@ typedef enum : NSUInteger
 @property (nonatomic) CGSize dayColumnSize;
 @property (nonatomic) CGFloat minimumVisibleHeight;  // if 2 cells overlap, and the height of the uncovered part of the upper cell is less than this value, the column is split
 @property (nonatomic) BOOL ignoreNextInvalidation;  // for some reason, UICollectionView reloadSections: messes up with scrolling and animations so we have to stick with using reloadData even when only individual sections need to be invalidated. As a workaroud, we explicitly invalidate them with custom context, and set this flag to YES before calling reloadData
-@property (nonatomic) TimedEventCoveringType coveringType;  // how to handle event covering
+@property (nonatomic) MGCDayPlannerCoveringType coveringType;  // how to handle event covering
 
 @end
 

@@ -119,6 +119,8 @@ static NSString* const EventCellsKey = @"EventCellsKey";
 
 - (NSArray*)layoutAttributesForEventCellsInSection:(NSUInteger)section
 {
+    const NSUInteger padding = 2.f;
+    
     NSInteger numItems = [self.collectionView numberOfItemsInSection:section];
     NSMutableArray *layoutAttribs = [NSMutableArray arrayWithCapacity:numItems];
     NSMutableArray *objects = [NSMutableArray arrayWithCapacity:numItems];
@@ -139,7 +141,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
             cellAttribs.zIndex = 1;  // should appear above dimming views
             
             [layoutAttribs addObject:cellAttribs];
-            if (self.coveringType == TimedEventCoveringTypeCustom &&
+            if (self.coveringType == MGCDayPlannerCoveringTypeCustom &&
                 self.customLayoutDelegate) {
                 id object = [self.customLayoutDataSource dayPlannerViewObjectForIndexPath:indexPath];
                 if (object) {
@@ -149,7 +151,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         }
     }
     
-    return [self adjustLayoutForOverlappingCells:layoutAttribs inSection:section forObjects:objects coveringType:self.coveringType totalWidth:(self.dayColumnSize.width - 2.f)];
+    return [self adjustLayoutForOverlappingCells:layoutAttribs inSection:section forObjects:objects coveringType:self.coveringType totalWidth:(self.dayColumnSize.width - padding)];
 }
 
 - (NSDictionary*)layoutAttributesForSection:(NSUInteger)section
@@ -174,7 +176,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
     return sectionAttribs;
 }
 
-- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects coveringType:(TimedEventCoveringType)coveringType totalWidth:(CGFloat)totalWidth
+- (NSArray*)adjustLayoutForOverlappingCells:(NSArray*)attributes inSection:(NSUInteger)section forObjects:(NSArray<id> *)objects coveringType:(MGCDayPlannerCoveringType)coveringType totalWidth:(CGFloat)totalWidth
 {
     const CGFloat kOverlapOffset = 4.;
     
@@ -189,7 +191,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         return NSOrderedSame;
     }];
 
-    if (coveringType == TimedEventCoveringTypeClassic) {
+    if (coveringType == MGCDayPlannerCoveringTypeClassic) {
         
         for (NSUInteger i = 0; i < adjustedAttributes.count; i++) {
             MGCEventCellLayoutAttributes *attribs1 = [adjustedAttributes objectAtIndex:i];
@@ -256,7 +258,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         
         return adjustedAttributes;
         
-    } else if (coveringType == TimedEventCoveringTypeComplex) {
+    } else if (coveringType == MGCDayPlannerCoveringTypeComplex) {
         
         // Create clusters - groups of rectangles which don't have common parts with other groups
         NSMutableArray *uninspectedAttributes = [adjustedAttributes mutableCopy];
@@ -299,7 +301,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         
         return attributes;
         
-    } else if (coveringType == TimedEventCoveringTypeCustom) {
+    } else if (coveringType == MGCDayPlannerCoveringTypeCustom) {
         
         NSLog(@"atrributes: %@", attributes);
         
@@ -307,30 +309,26 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         if (self.customLayoutDelegate) {
             attributes = [self.customLayoutDelegate dayPlannerViewAdjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects];
             
-            if ([self.customLayoutDelegate dayPlannerViewShouldUseBuiltinLayoutingAfterCustom]) {
+            MGCDayPlannerCoveringType coveringType = [self.customLayoutDelegate dayPlannerViewCoveringTypeInCustomLayout];
+            if (coveringType != MGCDayPlannerCoveringTypeNone) {
                 
                 if (attributes.count > 0) {
                     MGCEventCellLayoutAttributes *attribute = [attributes firstObject];
                     totalWidth = attribute.size.width;
                 }
                 
-                attributes = [self adjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects coveringType:TimedEventCoveringTypeComplex totalWidth:totalWidth];
+                attributes = [self adjustLayoutForOverlappingCells:attributes inSection:section forObjects:objects coveringType:coveringType totalWidth:totalWidth];
             }
             
-            return attributes;
-                
-        } else {
             return attributes;
         }
     }
     
-    return @[];
+    return attributes;
 }
 
 - (void)expandCellsToMaxWidthInCluster:(NSMutableArray<MGCEventCellLayoutAttributes *> *)cluster totalWidth:(CGFloat)totalWidth
 {
-    const NSUInteger padding = 2.f;
-    
     // Expand the attributes to maximum possible width
     NSMutableArray<NSMutableArray<MGCEventCellLayoutAttributes *> *> *columns = [NSMutableArray new];
     [columns addObject:[NSMutableArray new]];

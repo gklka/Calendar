@@ -62,7 +62,8 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerTimeMark) {
 typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
     MGCDayPlannerCoveringTypeClassic = 0,
     MGCDayPlannerCoveringTypeComplex = 1,
-    MGCDayPlannerCoveringTypeCustom = 2
+    MGCDayPlannerCoveringTypeCustom = 2,
+    MGCDayPlannerCoveringTypeNone = 100
 };
 
 
@@ -724,7 +725,7 @@ typedef NS_ENUM(NSUInteger, MGCDayPlannerCoveringType) {
 
 /*!
  */
-- (BOOL)dayPlannerViewShouldUseBuiltinLayoutingAfterCustom;
+- (MGCDayPlannerCoveringType)dayPlannerViewCoveringTypeInCustomLayout;
 
 @end
 
