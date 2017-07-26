@@ -303,7 +303,7 @@ static NSString* const EventCellsKey = @"EventCellsKey";
         
     } else if (coveringType == MGCDayPlannerCoveringTypeCustom) {
         
-        NSLog(@"atrributes: %@", attributes);
+//        NSLog(@"atrributes: %@", attributes);
         
         // Ask the delegate
         if (self.customLayoutDelegate) {
