@@ -270,7 +270,8 @@ static NSString* const EventCellsKey = @"EventCellsKey";
             
             for (NSMutableArray<MGCEventCellLayoutAttributes *> *cluster in clusters) {
                 for (MGCEventCellLayoutAttributes *clusteredAttrib in cluster) {
-                    if (CGRectIntersectsRect(clusteredAttrib.frame, attrib.frame)) {
+                    if (CGRectIntersectsRect(clusteredAttrib.frame, attrib.frame) &&
+                        clusteredAttrib.differentiatorGroup == attrib.differentiatorGroup) {
                         destinationCluster = cluster;
                         break;
                     }

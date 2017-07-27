@@ -35,5 +35,6 @@
 
 @property (nonatomic) CGFloat visibleHeight;  // height of the visible portion of the cell
 @property (nonatomic) NSUInteger numberOfOtherCoveredAttributes;    // number of events which share a time section with this attribute
+@property (nonatomic) NSInteger differentiatorGroup;   // You can assing differentiatorGroup number to each attributes object. Only objects with the same value can be laid out into the same cluster
 
 @end

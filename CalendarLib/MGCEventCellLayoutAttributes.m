@@ -33,6 +33,16 @@
 
 @implementation MGCEventCellLayoutAttributes
 
+- (instancetype)init {
+    self = [super init];
+    
+    if (self) {
+        self.differentiatorGroup = 0;
+    }
+    
+    return self;
+}
+
 - (BOOL)isEqual:(id)object
 {
 	if (![super isEqual:object])
