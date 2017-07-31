@@ -1707,6 +1707,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
 	if (!self.timeScrollView.superview) {
 		[self addSubview:self.timeScrollView];
 	}
+    [self bringSubviewToFront:self.timedEventsView];
 	
 	self.timeRowsView.showsCurrentTime = [self.visibleDays containsDate:[NSDate date]];
 	
