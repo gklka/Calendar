@@ -146,6 +146,8 @@ static NSString* const EventCellsKey = @"EventCellsKey";
                 id object = [self.customLayoutDataSource dayPlannerViewObjectForIndexPath:indexPath];
                 if (object) {
                     [objects addObject:object];
+                } else {
+                    [objects addObject:[NSNull null]];
                 }
             }
         }
