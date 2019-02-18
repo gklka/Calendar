@@ -73,6 +73,7 @@ static NSDateFormatter *dateFormatter;
 {
 	if (!dateFormatter) {
 		dateFormatter = [NSDateFormatter new];
+        dateFormatter.locale = [NSLocale currentLocale];
 		dateFormatter.dateStyle = NSDateFormatterMediumStyle;
 		dateFormatter.timeStyle = NSDateFormatterMediumStyle;
 	}

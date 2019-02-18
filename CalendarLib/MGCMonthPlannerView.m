@@ -105,6 +105,7 @@ typedef enum
 {
     _calendar = [NSCalendar currentCalendar];
     _dateFormatter = [NSDateFormatter new];
+    _dateFormatter.locale = [NSLocale currentLocale];
     _dateFormatter.calendar = _calendar;
     _dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:kDefaultDateFormat options:0 locale:[NSLocale currentLocale]]; //kDefaultDateFormat;
     _rowHeight = isiPad ? 140. : 60.;
@@ -908,6 +909,7 @@ typedef enum
         
     NSDateFormatter *formatter = [NSDateFormatter new];
     formatter.calendar = self.calendar;
+    formatter.locale = [NSLocale currentLocale];
     
     NSArray *days = self.weekDaysStringArray;
     if (!days) {
@@ -1422,6 +1424,7 @@ typedef enum
         dateFormatter = [NSDateFormatter new];
     }
     dateFormatter.calendar = self.calendar;
+    dateFormatter.locale = [NSLocale currentLocale];
 
     NSString *fmtTemplate = self.monthHeaderStyle & MGCMonthHeaderStyleShort ? @"MMMM" : @"MMMMYYYY";
     dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:fmtTemplate options:0 locale:locale];

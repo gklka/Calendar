@@ -66,6 +66,7 @@ typedef enum : NSUInteger
     
     self.dateFormatter = [NSDateFormatter new];
     self.dateFormatter.calendar = self.calendar;
+    self.dateFormatter.locale = [NSLocale currentLocale];
     
     if (isiPad) {
         //NSLog(@"---------------- iPAD ------------------");

@@ -1869,6 +1869,7 @@ static const CGFloat kMaxHourSlotHeight = 150.;
             dateFormatter = [NSDateFormatter new];
         }
         dateFormatter.dateFormat = self.dateFormat ?: @"d MMM\neeeee";
+        dateFormatter.locale = [NSLocale currentLocale];
 
         NSString *s = [dateFormatter stringFromDate:date];
         

@@ -148,6 +148,7 @@ static NSString* const EventCellReuseIdentifier = @"EventCellReuseIdentifier";
     self.bgQueue = dispatch_queue_create("MGCMonthPlannerEKViewController.bgQueue", NULL);
     
     self.dateFormatter = [NSDateFormatter new];
+    self.dateFormatter.locale = [NSLocale currentLocale];
     self.dateFormatter.dateStyle = NSDateFormatterNoStyle;
     self.dateFormatter.timeStyle = NSDateFormatterShortStyle;
     

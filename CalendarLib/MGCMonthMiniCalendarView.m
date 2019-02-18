@@ -62,6 +62,7 @@ static const CGFloat kDefaultHeaderFontSizeiPhone = 8;
         _date = [NSDate date];
         _dateFormatter = [NSDateFormatter new];
         _dateFormatter.dateFormat = @"MMMM yyyy";
+        _dateFormatter.locale = [NSLocale currentLocale];
         if (isiPad) {
             //NSLog(@"---------------- iPAD ------------------");
             _daysFont = [UIFont systemFontOfSize:kDefaultDayFontSize];
